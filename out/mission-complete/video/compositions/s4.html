@@ -1,0 +1,53 @@
+<template>
+  <!-- S4 제출 · 119–181f · ref 4 · 5 · 10 · 부품: mission-card → 화면 03-mission → button-submit(submit) -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #s4-fill { background: var(--color-primary); opacity: 0; } /* 누른 버튼 색 = mission-card 버튼 color-primary */
+  </style>
+  <div id="root" data-composition-id="s4" data-width="1920" data-height="1080" data-layout-allow-overflow data-layout-allow-overlap>
+    <div id="s4-wrap" class="x28">
+      <div id="s4-card" class="mc">
+        <div class="cover">
+          <div class="copy">
+            <p class="caption eyebrow">이번 달 미션  ·  D–12</p>
+            <p class="title">반복 업무를 줄이는<br>AI 자동화</p>
+          </div>
+          <div class="character"><img src="assets/img/perdi-flag.png" alt="" /></div>
+        </div>
+        <p class="caption deliverables">자동화 자산 1개 + 실제 적용 사례 1개</p>
+        <div class="progress">
+          <div class="progress-labels">
+            <p class="caption progress-text">50% · 2/4 단계 완료</p>
+            <p class="caption due">9월 30일 마감</p>
+          </div>
+          <div class="track"><div id="s4-cardfill" class="fill"></div></div>
+        </div>
+        <div id="s4-card-btn" class="button"><p>적용 사례 정리하기 →</p></div>
+      </div>
+    </div>
+    <div id="s4-fill" class="cover-fill"></div>
+    <div id="s4-phone" class="phone"><img src="assets/screens/03-mission.png" alt="" /></div>
+    <div class="x28"><div id="s4-btn" class="bs"><p class="label">제출하기</p></div></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const { f, motion, hold, pattern } = T;
+    gsap.set("#s4-cardfill", { scaleX: 0.5 });
+    gsap.set(["#s4-phone", "#s4-btn"], { opacity: 0 }); // 처음 상태 (타임라인 밖)
+    // 0–32 screen-change: 카드 버튼이 커져 채움 → 03-mission (radius-button 8)
+    let t = T.screenChange(tl, 0, { from: document.getElementById("s4-card-btn"), wrapper: document.getElementById("s4-wrap"),
+      fill: "#s4-fill", phone: "#s4-phone", hide: "#s4-card", radius: 8 });
+    t += f(hold["hold-beat"]); // 32–37
+    // 37–43 폰 motion-exit + 버튼 motion-enter
+    tl.to("#s4-phone", { opacity: 0, duration: motion.exit.d, ease: motion.exit.ease }, t);
+    tl.fromTo("#s4-btn", { opacity: 0 }, { opacity: 1, duration: motion.enter.d, ease: motion.enter.ease }, t);
+    t += motion.enter.d + f(hold["hold-beat"]); // 43–48
+    // 48–57 button-press
+    const p = pattern.press;
+    tl.to("#s4-btn", { scale: p.scale, duration: p.down.d, ease: p.down.ease }, t);
+    tl.to("#s4-btn", { scale: 1, duration: p.up.d, ease: p.up.ease }, t + p.down.d);
+    // 57–62 hold-beat
+    tl.set({}, {}, t + p.down.d + p.up.d + f(hold["hold-beat"]));
+    window.__timelines["s4"] = tl;
+  </script>
+</template>

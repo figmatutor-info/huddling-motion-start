@@ -68,7 +68,7 @@ C 길이(70 · 110 · 150 · 240 · 400 · 700ms)는 쓰지 않는다. 우리 �
 
 | 패턴 | 대상 | 움직임 | 레퍼런스 시점 |
 |---|---|---|---|
-| `button-press` | `button-submit` | 눌림 `duration-3` · `curve-standard` → 뗌 `duration-6` · `curve-entrance` | V `11:00` 숫자 키 눌림 3f |
+| `button-press` | `button-submit` | scale 1 → 0.96 눌림 `duration-3` · `curve-standard` → 1로 뗌 `duration-6` · `curve-entrance` (0.96은 2026-11-08 새 후보에서 정함) | V `11:00` 숫자 키 눌림 3f |
 | `count-up` | `stat-card` `#stat-card-amount` span | 0 → `data-final` 값, `duration-16` · `curve-standard-expressive`. ₩는 고정 | V `11:15–12:00` 금액 0 → 500 → 5,000이 15f |
 | `progress-fill` | `mission-card` `--progress` · `#mission-card-progress-text` | 막대와 글자 함께 `motion-emphasis` | V `13:07–13:26` 버튼 왼쪽부터 채움 20f |
 | `badge-pulse` | `badge-approved` | `motion-enter`로 나온 뒤 `motion-emphasis` 한 번 | V `14:17–14:23` 체크 원 나타남 6f |
@@ -98,7 +98,7 @@ C 길이(70 · 110 · 150 · 240 · 400 · 700ms)는 쓰지 않는다. 우리 �
 
 | 토큰 | 움직임 | 길이 · 곡선 | 레퍼런스 시점 |
 |---|---|---|---|
-| `camera-rise` | 휴대폰이 아래에서 올라옴: translateY 400px → 0 · rotateX 35° → 8° · scale 0.8 → 1, 기준점 아래 가운데 | `duration-40` · `curve-out-cubic` | R 값 그대로 (R 1.5s = 45f → `duration-40`) · V `02:28–03:29` 올라옴, V `03:10–04:20` 기울기 풀림 40f |
+| `camera-rise` | 휴대폰이 아래에서 올라옴: translateY 400px → 0 · rotateX 35° → 8° · scale 0.8 → 1, 기준점 아래 가운데, perspective 1200px (2026-11-08 새 후보에서 정함) | `duration-40` · `curve-out-cubic` | R 값 그대로 (R 1.5s = 45f → `duration-40`) · V `02:28–03:29` 올라옴, V `03:10–04:20` 기울기 풀림 40f |
 | `camera-push` | 한 부품으로 다가간 뒤 그 부품이 화면을 채움 (`screen-change`로 이어짐) | 다가감 `duration-24` · `curve-standard-expressive` → 채움 `duration-6` · `curve-exit` | V `15:03–15:28` 다가감 26f, 가운데 `15:16`이 가장 빠름 (움직임 2.7 → 9.6 → 4.1) · V `16:04–16:10` 채움 7f, 점점 빨라지다 끊김 |
 | `camera-pull` | 한 점에서 화면 전체로 물러남 | `motion-transition` | V `06:19–07:04` 점 → 차트 → 휴대폰 16f |
 

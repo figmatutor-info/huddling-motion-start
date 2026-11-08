@@ -1,0 +1,33 @@
+<template>
+  <!-- S7 엔드 · 368–450f · ref 9 · 11 · 문구: src/screens/05-assets.png 헤드라인 · 로고: logotype-white (docs/video.md 5장) -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #s7-bg { position: absolute; inset: 0; background: var(--video-end-bg); }
+    .s7-line { position: absolute; left: 0; right: 0; top: 50%; margin-top: -47.5px; text-align: center; color: var(--video-text-on-end); }
+    /* 로고 417×53 = logotype 149×19 × 2.8 · 글줄 아래 한 행간(95) 띄움 */
+    #s7-logo { position: absolute; left: 50%; top: 50%; width: 417px; height: 53px; margin: 142.5px 0 0 -208.5px; }
+  </style>
+  <div id="root" data-composition-id="s7" data-width="1920" data-height="1080">
+    <div id="s7-bg"></div>
+    <p id="s7-a" class="s7-line video-display">배움이 쌓여,</p>
+    <p id="s7-b" class="s7-line video-display">나의 자산으로</p>
+    <img id="s7-logo" src="assets/img/logo-logotype-white.svg" alt="Huddling Club" />
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const { f, motion, hold, video } = T;
+    const lh = video.displayLineHeight;
+    gsap.set(["#s7-a", "#s7-b", "#s7-logo"], { opacity: 0 }); // 처음 상태 (타임라인 밖)
+    // 0 바탕 끊어 바꿈 · 0–5 hold-beat · 5–11 첫 줄 motion-enter
+    let t = f(hold["hold-beat"]);
+    tl.fromTo("#s7-a", { y: lh, opacity: 0 }, { y: 0, opacity: 1, duration: motion.enter.d, ease: motion.enter.ease }, t);
+    t += motion.enter.d + f(hold["hold-beat"]); // 11–16
+    // 16–22 state-swap (앞 줄 위로 exit + 새 줄 아래에서 enter, 거리 = 행간) + 로고 motion-enter
+    tl.to("#s7-a", { y: -lh, opacity: 0, duration: motion.exit.d, ease: motion.exit.ease }, t);
+    tl.fromTo("#s7-b", { y: lh, opacity: 0 }, { y: 0, opacity: 1, duration: motion.enter.d, ease: motion.enter.ease }, t);
+    tl.fromTo("#s7-logo", { opacity: 0 }, { opacity: 1, duration: motion.enter.d, ease: motion.enter.ease }, t);
+    // 22–82 hold-end
+    tl.set({}, {}, t + motion.enter.d + f(hold["hold-end"]));
+    window.__timelines["s7"] = tl;
+  </script>
+</template>

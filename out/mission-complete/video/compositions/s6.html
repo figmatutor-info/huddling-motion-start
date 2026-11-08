@@ -1,0 +1,73 @@
+<template>
+  <!-- S6 수익 · 275–368f · ref 5 · 7 · 8 · 10 · 부품: badge-approved → 화면 05-assets → stat-card -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #s6-fill { background: var(--color-primary-subtle); opacity: 0; } /* 누른 배지 색 = badge-approved color-primary-subtle */
+    #s6-group { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; } /* S5와 같은 배치 */
+  </style>
+  <div id="root" data-composition-id="s6" data-width="1920" data-height="1080" data-layout-allow-overflow data-layout-allow-overlap>
+    <div id="s6-wrap" class="x28">
+      <div id="s6-group">
+        <div id="s6-card" class="mc">
+          <div class="cover">
+            <div class="copy">
+              <p class="caption eyebrow">이번 달 미션  ·  D–12</p>
+              <p class="title">반복 업무를 줄이는<br>AI 자동화</p>
+            </div>
+            <div class="character"><img src="assets/img/perdi-flag.png" alt="" /></div>
+          </div>
+          <p class="caption deliverables">자동화 자산 1개 + 실제 적용 사례 1개</p>
+          <div class="progress">
+            <div class="progress-labels">
+              <p class="caption progress-text">100% · 4/4 단계 완료</p>
+              <p class="caption due">9월 30일 마감</p>
+            </div>
+            <div class="track"><div class="fill"></div></div>
+          </div>
+          <div class="button"><p>적용 사례 정리하기 →</p></div>
+        </div>
+        <div id="s6-badge" class="badge"><p class="label">승인 완료</p></div>
+      </div>
+    </div>
+    <div id="s6-fill" class="cover-fill"></div>
+    <div id="s6-phone" class="phone"><img src="assets/screens/05-assets.png" alt="" /></div>
+    <div class="x28">
+      <div id="s6-stat" class="stat">
+        <p class="heading">이번 달 수익  ₩<span id="s6-amount">0</span></p>
+        <p class="counts">전체 4개     /     검수 중 1개     /     판매 중 1개</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const { f, motion, hold, camera, video, H } = T;
+    gsap.set(["#s6-phone", "#s6-stat"], { opacity: 0 }); // 처음 상태 (타임라인 밖)
+    // 0–6 카드 motion-exit · 0–32 screen-change: 배지가 커져 채움 → 05-assets (radius-button 8, 배지 모서리)
+    tl.to("#s6-card", { opacity: 0, duration: motion.exit.d, ease: motion.exit.ease }, 0);
+    let t = T.screenChange(tl, 0, { from: document.getElementById("s6-badge"), wrapper: document.getElementById("s6-wrap"),
+      fill: "#s6-fill", phone: "#s6-phone", hide: "#s6-badge", radius: 8 });
+    t += f(hold["hold-beat"]); // 32–37
+    // 37–61 camera-push: stat-card로 다가감. stat-card 자리 = 05-assets 화면에서 잰 값 (390pt 기준 x 20 · y 169 · 350×101)
+    const s = video.phoneScreenScale, b = video.phone.bezel;
+    const ox = b + (20 + 350 / 2) * s, oy = b + (169 + 101 / 2) * s; // 폰 안 stat-card 가운데
+    const dy = H / 2 - (H / 2 - video.phone.h / 2 + oy); // 그 점을 화면 가운데로
+    const push = camera.push;
+    tl.to("#s6-phone", { transformOrigin: `${ox}px ${oy}px`, scale: video.scale / s, y: dy, duration: push.d, ease: push.ease }, t);
+    t += push.d; // 61
+    // 61–67 채움: 폰이 빠지고 stat-card(×2.8)만 남음
+    tl.to("#s6-phone", { opacity: 0, duration: push.fillD, ease: push.fillEase }, t);
+    tl.fromTo("#s6-stat", { opacity: 0 }, { opacity: 1, duration: push.fillD, ease: push.fillEase }, t);
+    t += push.fillD + f(hold["hold-beat"]); // 67–72
+    // 72–88 count-up 0 → data-final 29,700 (src/parts/stat-card.html), ₩ 고정
+    const amount = document.getElementById("s6-amount");
+    const c = { v: 0 }, final = 29700;
+    // 채움 동안 폰 화면의 ₩29,700 위에 ₩0이 겹치지 않도록, 카드 금액은 카운트업이 시작될 때 보인다
+    gsap.set(amount, { opacity: 0 }); // 처음 상태 (타임라인 밖)
+    tl.set(amount, { opacity: 1 }, t);
+    tl.to(c, { v: final, duration: T.pattern.countUp.d, ease: T.pattern.countUp.ease,
+      onUpdate: () => { amount.textContent = Math.round(c.v).toLocaleString("en-US"); } }, t);
+    // 88–93 hold-beat
+    tl.set({}, {}, t + T.pattern.countUp.d + f(hold["hold-beat"]));
+    window.__timelines["s6"] = tl;
+  </script>
+</template>

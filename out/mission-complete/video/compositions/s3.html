@@ -1,0 +1,42 @@
+<template>
+  <!-- S3 미션 카드 · 87–119f · ref 4 · 10 · 부품: src/parts/mission-card.html (--progress 0.5) -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; }
+  </style>
+  <div id="root" data-composition-id="s3" data-width="1920" data-height="1080" data-layout-allow-overflow>
+    <div id="s3-phone" class="phone"><img src="assets/screens/01-home.png" alt="" /></div>
+    <div class="x28">
+      <div id="s3-card" class="mc">
+        <div class="cover">
+          <div class="copy">
+            <p class="caption eyebrow">이번 달 미션  ·  D–12</p>
+            <p class="title">반복 업무를 줄이는<br>AI 자동화</p>
+          </div>
+          <div class="character"><img src="assets/img/perdi-flag.png" alt="" /></div>
+        </div>
+        <p class="caption deliverables">자동화 자산 1개 + 실제 적용 사례 1개</p>
+        <div class="progress">
+          <div class="progress-labels">
+            <p class="caption progress-text">50% · 2/4 단계 완료</p>
+            <p class="caption due">9월 30일 마감</p>
+          </div>
+          <div class="track"><div id="s3-fill" class="fill"></div></div>
+        </div>
+        <div class="button"><p>적용 사례 정리하기 →</p></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const { f, motion, hold, camera } = T;
+    const r = camera.rise;
+    gsap.set("#s3-fill", { scaleX: 0.5 }); // --progress 0.5 (부품 기본값 = 피그마 값)
+    // 0–6 폰 motion-exit (S2 끝 모습 그대로에서) + 카드 motion-enter
+    tl.fromTo("#s3-phone", { rotationX: r.rotTo, transformPerspective: r.perspective, transformOrigin: "50% 100%", opacity: 1 },
+      { opacity: 0, duration: motion.exit.d, ease: motion.exit.ease }, 0);
+    tl.fromTo("#s3-card", { opacity: 0 }, { opacity: 1, duration: motion.enter.d, ease: motion.enter.ease }, 0);
+    // 6–27 hold-read · 27–32 hold-beat
+    tl.set({}, {}, f(6 + hold["hold-read"] + hold["hold-beat"]));
+    window.__timelines["s3"] = tl;
+  </script>
+</template>
