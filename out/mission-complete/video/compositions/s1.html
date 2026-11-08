@@ -1,0 +1,29 @@
+<template>
+  <!-- S1 훅 · 0–42f · ref 1 · 2 · 10 · 문구: src/screens/01-home.png 헤드라인 -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    /* 가운데 한 줄 (docs/video.md 3장 헤드라인). margin-top = 행간 95 ÷ 2 */
+    #s1-line { position: absolute; left: 0; right: 0; top: 50%; margin-top: -47.5px; display: flex; justify-content: center; color: var(--video-text); }
+  </style>
+  <div id="root" data-composition-id="s1" data-width="1920" data-height="1080">
+    <p id="s1-line" class="video-display"><span id="s1-a">오늘도 하나씩,</span><span id="s1-b">&nbsp;내 실력으로</span></p>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const { f, motion, hold, video } = T;
+    document.fonts.ready.then(() => {
+      // 첫 줄만 있을 때 가운데: 둘째 단어 폭의 절반만큼 오른쪽에서 시작 (motion-move로 다시 가운데 맞춤)
+      const shift = document.getElementById("s1-b").offsetWidth / 2;
+      const lh = video.displayLineHeight; // 들어오는 거리 = 행간 (motion.md 3장 state-swap)
+      // 0–6 첫 줄 motion-enter
+      tl.fromTo("#s1-a", { x: shift, y: lh, opacity: 0 }, { y: 0, opacity: 1, duration: motion.enter.d, ease: motion.enter.ease }, 0);
+      gsap.set("#s1-b", { x: shift, y: lh, opacity: 0 }); // 처음 상태 (타임라인 밖)
+      // 6–11 hold-beat → 11–17 둘째 단어 motion-enter + 11–21 줄 가운데 맞춤 motion-move
+      const t2 = f(6 + hold["hold-beat"]);
+      tl.to("#s1-b", { y: 0, opacity: 1, duration: motion.enter.d, ease: motion.enter.ease }, t2);
+      tl.to(["#s1-a", "#s1-b"], { x: 0, duration: motion.move.d, ease: motion.move.ease }, t2);
+      // 21–42 hold-read
+      window.__timelines["s1"] = tl;
+    });
+  </script>
+</template>

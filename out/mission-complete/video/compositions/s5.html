@@ -1,0 +1,62 @@
+<template>
+  <!-- S5 승인 · 181–275f · ref 5 · 6 · 10 · 부품: button-submit → 화면 04-approved → mission-card + badge-approved -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #s5-fill { background: var(--color-primary); opacity: 0; }
+    /* 카드 아래 배지, 왼쪽 맞춤, 사이 20 = 04-approved 화면에서 잰 간격(카드 아래 끝 → 배지 위 끝) */
+    #s5-group { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+  </style>
+  <div id="root" data-composition-id="s5" data-width="1920" data-height="1080" data-layout-allow-overflow data-layout-allow-overlap>
+    <div id="s5-btnwrap" class="x28"><div id="s5-btn" class="bs"><p class="label">제출하기</p></div></div>
+    <div id="s5-fill" class="cover-fill"></div>
+    <div id="s5-phone" class="phone"><img src="assets/screens/04-approved.png" alt="" /></div>
+    <div class="x28">
+      <div id="s5-group">
+        <div id="s5-card" class="mc">
+          <div class="cover">
+            <div class="copy">
+              <p class="caption eyebrow">이번 달 미션  ·  D–12</p>
+              <p class="title">반복 업무를 줄이는<br>AI 자동화</p>
+            </div>
+            <div class="character"><img src="assets/img/perdi-flag.png" alt="" /></div>
+          </div>
+          <p class="caption deliverables">자동화 자산 1개 + 실제 적용 사례 1개</p>
+          <div class="progress">
+            <div class="progress-labels">
+              <p id="s5-ptext" class="caption progress-text">50% · 2/4 단계 완료</p>
+              <p class="caption due">9월 30일 마감</p>
+            </div>
+            <div class="track"><div id="s5-cardfill" class="fill"></div></div>
+          </div>
+          <div class="button"><p>적용 사례 정리하기 →</p></div>
+        </div>
+        <div id="s5-badge" class="badge"><p class="label">승인 완료</p></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const { f, motion, hold } = T;
+    gsap.set(["#s5-phone", "#s5-card", "#s5-badge"], { opacity: 0 }); // 처음 상태 (타임라인 밖)
+    gsap.set("#s5-cardfill", { scaleX: 0.5 });
+    // 0–32 screen-change: 제출 버튼이 커져 채움 → 04-approved (radius-button 8)
+    let t = T.screenChange(tl, 0, { from: document.getElementById("s5-btn"), wrapper: document.getElementById("s5-btnwrap"),
+      fill: "#s5-fill", phone: "#s5-phone", hide: "#s5-btn", radius: 8 });
+    t += f(hold["hold-beat"]); // 32–37
+    // 37–43 폰 motion-exit + 카드 motion-enter
+    tl.to("#s5-phone", { opacity: 0, duration: motion.exit.d, ease: motion.exit.ease }, t);
+    tl.fromTo("#s5-card", { opacity: 0 }, { opacity: 1, duration: motion.enter.d, ease: motion.enter.ease }, t);
+    t += motion.enter.d; // 43
+    // 43–67 progress-fill: 막대와 진행 글자 함께 motion-emphasis, 0.5 → 1 (글자는 03-mission 50% · 04-approved 100%)
+    const text = document.getElementById("s5-ptext");
+    const prog = { p: 0.5 };
+    tl.to("#s5-cardfill", { scaleX: 1, duration: motion.emphasis.d, ease: motion.emphasis.ease }, t);
+    tl.to(prog, { p: 1, duration: motion.emphasis.d, ease: motion.emphasis.ease,
+      onUpdate: () => { text.textContent = `${Math.round(prog.p * 100)}% · ${Math.round(prog.p * 4)}/4 단계 완료`; } }, t);
+    t += motion.emphasis.d; // 67
+    // 67–73 배지 motion-enter · 73–94 hold-read
+    tl.fromTo("#s5-badge", { opacity: 0 }, { opacity: 1, duration: motion.enter.d, ease: motion.enter.ease }, t);
+    tl.set({}, {}, t + motion.enter.d + f(hold["hold-read"]));
+    window.__timelines["s5"] = tl;
+  </script>
+</template>

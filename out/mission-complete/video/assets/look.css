@@ -1,0 +1,85 @@
+/* 영상 룩 — 값 출처는 줄마다 적는다. 부품 스타일은 src/parts/*.html 을 그대로 옮기고,
+   한 페이지에 같은 부품이 여러 번 나오므로 id 선택자만 class 로 바꿨다 (값은 그대로). */
+
+/* docs/design.md 3장 A · 로컬 폰트 */
+@font-face { font-family: "Pretendard"; font-weight: 400; src: url("fonts/Pretendard-Regular.otf") format("opentype"); }
+@font-face { font-family: "Pretendard"; font-weight: 600; src: url("fonts/Pretendard-SemiBold.otf") format("opentype"); }
+@font-face { font-family: "Pretendard"; font-weight: 700; src: url("fonts/Pretendard-Bold.otf") format("opentype"); }
+
+:root {
+  /* docs/design.md 1장 */
+  --color-bg: #ffffff;
+  --color-surface: #f7f7f8;
+  --color-text: #18191b;
+  --color-text-muted: #75777c;
+  --color-primary: #3759de;
+  --color-on-primary: #ffffff;
+  --color-primary-subtle: #edf1ff;
+  --color-border: #e9eaed;
+  --color-success: #247a51;
+  --color-character-bg: #e3f2fd;
+  --color-illustration-dce2f2: #dce2f2;
+  --color-illustration-ebeef5: #ebeef5;
+  /* docs/video.md 2장 · 3장 */
+  --video-bg: var(--color-surface);
+  --video-end-bg: var(--color-text);
+  --video-text: var(--color-text);
+  --video-text-on-end: var(--color-on-primary);
+}
+
+/* docs/video.md 3장 video-display (Text/display × 2.8) */
+.video-display { font-family: "Pretendard", sans-serif; font-weight: 700; font-size: 78px; line-height: 95px; letter-spacing: 0; white-space: nowrap; }
+
+/* 가운데 놓기용 — ×2.8 부품 감싸개. CSS transform 은 GSAP 이 건드리지 않는 감싸개에만 둔다 */
+.at-center { position: absolute; left: 50%; top: 50%; }
+.x28 { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(2.8); } /* docs/video.md 5장 video-part-scale */
+
+/* docs/video.md 4장 폰 프레임 */
+.phone {
+  position: absolute; left: 50%; top: 50%;
+  width: 457px; height: 956px; margin: -478px 0 0 -228.5px; /* video-phone 457×956, 가운데 */
+  box-sizing: border-box; padding: 14px; /* video-phone-bezel */
+  border-radius: 64px; background: var(--color-text); /* video-phone-radius 바깥 · bezel 색 */
+  box-shadow: 0 22px 67px #0000001f; /* video-phone-shadow */
+}
+.phone img { display: block; width: 429px; height: 928px; border-radius: 50px; } /* video-phone-screen · 화면 모서리 */
+
+/* src/parts/mission-card.html */
+.mc { box-sizing: border-box; width: 350px; padding: 16px; display: flex; flex-direction: column; gap: 12px; overflow: hidden;
+  border: 1px solid var(--color-illustration-dce2f2); border-radius: 12px; background: var(--color-bg); font-family: "Pretendard", sans-serif; }
+.mc p { margin: 0; }
+.mc .cover { width: 318px; display: flex; align-items: flex-start; gap: 12px; overflow: hidden; }
+.mc .copy { width: 218px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+.mc .caption { font-weight: 400; font-size: 12px; line-height: 16px; white-space: pre-wrap; }
+.mc .eyebrow { color: var(--color-primary); }
+.mc .title { font-weight: 700; font-size: 22px; line-height: 28px; color: var(--color-text); }
+.mc .character { flex: none; width: 88px; height: 96px; overflow: hidden; background: var(--color-character-bg); }
+.mc .character img { display: block; width: 88px; height: 96px; object-fit: contain; }
+.mc .deliverables { width: 318px; color: var(--color-text-muted); }
+.mc .progress { width: 318px; display: flex; flex-direction: column; gap: 8px; }
+.mc .progress-labels { display: flex; }
+.mc .progress-text { width: 190px; color: var(--color-primary); }
+.mc .due { width: 128px; color: var(--color-text-muted); text-align: right; }
+.mc .track { position: relative; width: 318px; height: 3px; overflow: hidden; border-radius: 1.5px; background: var(--color-illustration-ebeef5); }
+/* 채움: 부품은 width 로 --progress 를 쓰지만, 영상에서는 GSAP 이 scaleX 로 같은 비율을 그린다 (transform 규칙) */
+.mc .fill { position: absolute; left: 0; top: 0; width: 318px; height: 3px; border-radius: 1.5px; background: var(--color-primary); transform-origin: left center; }
+.mc .button { box-sizing: border-box; width: 318px; padding: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; background: var(--color-primary); }
+.mc .button p { flex: 1 0 0; font-weight: 600; font-size: 14px; line-height: 20px; color: var(--color-on-primary); text-align: center; }
+
+/* src/parts/button-submit.html (submit 상태) */
+.bs { box-sizing: border-box; width: 350px; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; overflow: hidden; border-radius: 8px; background: var(--color-primary); }
+.bs .label { flex: 1 0 0; min-width: 1px; margin: 0; font-family: "Pretendard", sans-serif; font-weight: 600; font-size: 14px; line-height: 20px; color: var(--color-on-primary); text-align: center; }
+
+/* src/parts/badge-approved.html */
+.badge { box-sizing: border-box; width: 108px; padding: 8px; overflow: hidden; border-radius: 8px; background: var(--color-primary-subtle); }
+.badge .label { width: 92px; margin: 0; font-family: "Pretendard", sans-serif; font-weight: 400; font-size: 12px; line-height: 16px; color: var(--color-success); }
+
+/* src/parts/stat-card.html */
+.stat { box-sizing: border-box; width: 350px; padding: 20px; display: flex; flex-direction: column; gap: 12px; overflow: hidden;
+  border-top: 1px solid var(--color-border); border-radius: 12px; background: var(--color-bg); color: var(--color-text); font-family: "Pretendard", sans-serif; white-space: pre-wrap; }
+.stat p { width: 310px; margin: 0; }
+.stat .heading { font-weight: 700; font-size: 20px; line-height: 28px; font-variant-numeric: tabular-nums; } /* tabular-nums: stat-card 주석대로 카운트업용으로 장면에서 더함 */
+.stat .counts { font-weight: 600; font-size: 14px; line-height: 20px; }
+
+/* 장면 전환용 채움 면 (screen-change: 누른 부품이 커져 화면을 채움) */
+.cover-fill { position: absolute; inset: 0; }
